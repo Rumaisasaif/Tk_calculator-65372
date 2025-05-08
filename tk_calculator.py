@@ -1,85 +1,84 @@
 import tkinter as tk
-from tkinter import messagebox
+import math
 
-# Function to perform calculations
+# Function to perform basic arithmetic operations
 def calculate(operation):
     try:
         num1 = float(entry1.get())
         num2 = float(entry2.get())
 
         if operation == "add":
-            result.set(f"{num1 + num2:.2f}")
+            result.set(num1 + num2)
         elif operation == "subtract":
-            result.set(f"{num1 - num2:.2f}")
+            result.set(num1 - num2)
         elif operation == "multiply":
-            result.set(f"{num1 * num2:.2f}")
+            result.set(num1 * num2)
         elif operation == "divide":
             if num2 != 0:
-                result.set(f"{num1 / num2:.2f}")
+                result.set(num1 / num2)
             else:
-                result.set("❌ Cannot divide by 0")
+                result.set("Error: Divide by 0")
     except ValueError:
-        result.set("⚠️ Invalid input")
+        result.set("Invalid input")
 
-# GUI Setup
+def square():
+    try:
+        num = float(entry1.get())
+        result.set(num ** 2)
+    except ValueError:
+        result.set("Invalid input")
+
+def square_root():
+    try:
+        num = float(entry1.get())
+        if num >= 0:
+            result.set(math.sqrt(num))
+        else:
+            result.set("Error: Negative input")
+    except ValueError:
+        result.set("Invalid input")
+
+# ----- GUI Setup -----
 root = tk.Tk()
-root.title("🧮 Professional Calculator")
-root.geometry("380x280")
-root.configure(bg="#1e1e2f")
+root.title("🧮 Simple GUI Calculator")
+root.geometry("400x400")
+root.configure(bg="#1e1e2f")  # Dark background
 
-# --- Theme Colors and Fonts ---
-LABEL_COLOR = "#e0e0e0"
-ENTRY_BG = "#2e2e3f"
-ENTRY_FG = "#ffffff"
-BTN_BG = "#0077b6"
-BTN_FG = "#ffffff"
-RESULT_FG = "#00ffcc"
-FONT_MAIN = ("Segoe UI", 11)
+# Styles
+label_style = {"bg": "#1e1e2f", "fg": "white", "font": ("Segoe UI", 11)}
+entry_style = {"font": ("Segoe UI", 11), "bg": "#2e2e3f", "fg": "white", "insertbackground": "white"}
+button_style = {"bg": "#007acc", "fg": "white", "font": ("Segoe UI", 10, "bold"), "width": 15, "relief": "flat", "padx": 5, "pady": 5}
 
-# --- Title ---
-tk.Label(root, text="Simple Calculator", font=("Segoe UI", 16, "bold"), bg="#1e1e2f", fg="#00ffcc").pack(pady=10)
+# Title
+tk.Label(root, text="Simple Calculator", font=("Segoe UI", 16, "bold"), fg="#00ffff", bg="#1e1e2f").pack(pady=15)
 
-# --- Input Frame ---
-input_frame = tk.Frame(root, bg="#1e1e2f")
-input_frame.pack(pady=10)
+# Entry Fields
+tk.Label(root, text="Enter first number:", **label_style).pack()
+entry1 = tk.Entry(root, **entry_style)
+entry1.pack(pady=5)
 
-tk.Label(input_frame, text="First Number:", font=FONT_MAIN, bg="#1e1e2f", fg=LABEL_COLOR).grid(row=0, column=0, sticky="e", padx=5, pady=5)
-entry1 = tk.Entry(input_frame, font=FONT_MAIN, bg=ENTRY_BG, fg=ENTRY_FG, relief="flat", insertbackground=ENTRY_FG)
-entry1.grid(row=0, column=1, padx=5, pady=5)
+tk.Label(root, text="Enter second number:", **label_style).pack()
+entry2 = tk.Entry(root, **entry_style)
+entry2.pack(pady=5)
 
-tk.Label(input_frame, text="Second Number:", font=FONT_MAIN, bg="#1e1e2f", fg=LABEL_COLOR).grid(row=1, column=0, sticky="e", padx=5, pady=5)
-entry2 = tk.Entry(input_frame, font=FONT_MAIN, bg=ENTRY_BG, fg=ENTRY_FG, relief="flat", insertbackground=ENTRY_FG)
-entry2.grid(row=1, column=1, padx=5, pady=5)
-
-# --- Result Display ---
-result_frame = tk.Frame(root, bg="#1e1e2f")
-result_frame.pack(pady=(5, 15))
-
-tk.Label(result_frame, text="Result:", font=("Segoe UI", 12, "bold"),
-         bg="#1e1e2f", fg="#ffffff").pack(anchor="w")
-
+# Result Field
+tk.Label(root, text="Result:", **label_style).pack(pady=(10, 0))
 result = tk.StringVar()
-result_entry = tk.Entry(result_frame, textvariable=result,
-                        font=("Segoe UI", 14, "bold"), state="readonly",
-                        bg="#202030", fg="#00ffcc", relief="flat", justify="center",
-                        readonlybackground="#202030", bd=2, highlightthickness=1, highlightbackground="#00ffcc")
-result_entry.pack(ipady=10, padx=10, fill="x")
+result_entry = tk.Entry(root, textvariable=result, font=("Segoe UI", 14, "bold"),
+                        bg="#202030", fg="#00ffcc", state="readonly", relief="flat",
+                        justify="center", readonlybackground="#202030", bd=2,
+                        highlightthickness=1, highlightbackground="#00ffcc")
+result_entry.pack(ipady=10, padx=30, pady=5, fill="x")
 
-# --- Button Frame ---
+# Buttons
 btn_frame = tk.Frame(root, bg="#1e1e2f")
-btn_frame.pack(pady=5)
+btn_frame.pack(pady=20)
 
-tk.Button(btn_frame, text="➕ Add", command=lambda: calculate("add"),
-          bg=BTN_BG, fg=BTN_FG, font=FONT_MAIN, relief="flat", width=14).grid(row=0, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Add", command=lambda: calculate("add"), **button_style).grid(row=0, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Subtract", command=lambda: calculate("subtract"), **button_style).grid(row=0, column=1, padx=5, pady=5)
+tk.Button(btn_frame, text="Multiply", command=lambda: calculate("multiply"), **button_style).grid(row=1, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Divide", command=lambda: calculate("divide"), **button_style).grid(row=1, column=1, padx=5, pady=5)
+tk.Button(btn_frame, text="Square", command=square, **button_style).grid(row=2, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Square Root", command=square_root, **button_style).grid(row=2, column=1, padx=5, pady=5)
 
-tk.Button(btn_frame, text="➖ Subtract", command=lambda: calculate("subtract"),
-          bg=BTN_BG, fg=BTN_FG, font=FONT_MAIN, relief="flat", width=14).grid(row=0, column=1, padx=5, pady=5)
-
-tk.Button(btn_frame, text="✖ Multiply", command=lambda: calculate("multiply"),
-          bg=BTN_BG, fg=BTN_FG, font=FONT_MAIN, relief="flat", width=14).grid(row=1, column=0, padx=5, pady=5)
-
-tk.Button(btn_frame, text="➗ Divide", command=lambda: calculate("divide"),
-          bg=BTN_BG, fg=BTN_FG, font=FONT_MAIN, relief="flat", width=14).grid(row=1, column=1, padx=5, pady=5)
-
-# Run the GUI
 root.mainloop()
